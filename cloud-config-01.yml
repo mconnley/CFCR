@@ -1,0 +1,60 @@
+azs:
+- cloud_properties:
+    datacenters:
+    - clusters:
+      - MCCluster:
+          resource_pool: k8s-01
+  name: z1
+compilation:
+  az: z1
+  network: DPortGroup_LAN
+  reuse_compilation_vms: true
+  vm_type: worker
+  workers: 4
+disk_types:
+- disk_size: 10240
+  cloud_properties:
+    type: thin
+  name: 10240
+- disk_size: 5120
+  cloud_properties:
+    type: thin
+  name: 5120
+- disk_size: 25600
+  cloud_properties:
+    type: thin
+  name: 25600
+networks:
+- name: DPortGroup_LAN
+  subnets:
+  - azs:
+    - z1
+    cloud_properties:
+      name: DPortGroup_LAN
+    dns:
+    - 192.168.2.202
+    gateway: 192.168.2.1
+    range: 192.168.2.0/24
+    reserved:
+    - 192.168.2.1-192.168.2.201
+    - 192.168.2.239-192.168.2.254
+    static:
+    - 192.168.2.203
+    - 192.168.2.204
+  type: manual
+vm_types:
+- cloud_properties:
+    cpu: 1
+    disk: 10240
+    ram: 1024
+  name: common
+- cloud_properties:
+    cpu: 1
+    disk: 10240
+    ram: 1024
+  name: master
+- cloud_properties:
+    cpu: 2
+    disk: 10240
+    ram: 1024
+  name: worker
