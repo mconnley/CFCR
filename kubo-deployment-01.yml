@@ -1,0 +1,201 @@
+instance_groups:
+- azs:
+  - z1
+  instances: 3
+  jobs:
+  - name: etcd
+    properties:
+      etcd:
+        peer_require_ssl: false
+        require_ssl: false
+    release: kubo-etcd
+  name: etcd
+  networks:
+  - name: DPortGroup_LAN
+  persistent_disk_type: 5120
+  stemcell: trusty
+  vm_type: common
+- azs:
+  - z1
+  instances: 2
+  jobs:
+  - name: cloud-provider
+    properties: {}
+    release: kubo
+  - name: flanneld
+    release: kubo
+  - name: kubernetes-api
+    properties:
+      admin-password: kubopassword
+      admin-username: admin
+      backend_port: 8443
+      kubelet-password: kubopassword
+      port: 443
+      tls:
+        kubernetes: ((tls-kubernetes))
+    release: kubo
+  - name: kubeconfig
+    properties:
+      kubelet-password: kubopassword
+      kubernetes-api-url: https://192.168.2.203:443
+      tls:
+        kubernetes: ((tls-kubernetes))
+    release: kubo
+  - name: kubernetes-controller-manager
+    properties: {}
+    release: kubo
+  - name: kubernetes-scheduler
+    release: kubo
+  - name: kubernetes-system-specs
+    properties:
+      kubernetes-api-url: https://192.168.2.203:443
+    release: kubo
+  name: master
+  networks:
+  - name: DPortGroup_LAN
+  stemcell: trusty
+  vm_type: master
+- azs:
+  - z1
+  instances: 1
+  jobs:
+  - consumes:
+      tcp_backend:
+        from: master_haproxy
+    name: haproxy
+    properties:
+      ha_proxy:
+        disable_http: true
+        tcp_link_port: 9999
+    release: haproxy
+  name: master-haproxy
+  networks:
+  - default:
+    - dns
+    - gateway
+    name: DPortGroup_LAN
+    static_ips:
+    - 192.168.2.203
+  stemcell: trusty
+  vm_type: common
+- azs:
+  - z1
+  instances: 2
+  jobs:
+  - name: flanneld
+    release: kubo
+  - name: docker
+    properties:
+      docker:
+        default_ulimits:
+        - nofile=65536
+        flannel: true
+        ip_masq: false
+        iptables: false
+        log_level: error
+        storage_driver: overlay
+      env: {}
+    release: docker
+  - name: kubeconfig
+    properties:
+      kubelet-password: kubopassword
+      kubernetes-api-url: https://192.168.2.203:443
+      tls:
+        kubernetes: ((tls-kubernetes))
+    release: kubo
+  - name: cloud-provider
+    properties: {}
+    release: kubo
+  - name: kubelet
+    properties:
+      backend_port: 4231
+      kubernetes-api-url: https://192.168.2.203:443
+      port: 1234
+      tls:
+        kubelet: ((tls-kubelet))
+    release: kubo
+  - name: kubernetes-proxy
+    properties:
+      kubernetes-api-url: https://192.168.2.203:443
+    release: kubo
+  name: worker
+  networks:
+  - name: DPortGroup_LAN
+  persistent_disk_type: 10240
+  stemcell: trusty
+  vm_type: worker
+- azs:
+  - z1
+  instances: 1
+  jobs:
+  - consumes:
+      tcp_backend:
+        from: worker_haproxy
+    name: haproxy
+    properties:
+      ha_proxy:
+        disable_http: true
+        tcp_link_port: 9999
+    release: haproxy
+  name: worker-haproxy
+  networks:
+  - default:
+    - dns
+    - gateway
+    name: DPortGroup_LAN
+  stemcell: trusty
+  vm_type: common
+name: kubo-cluster-01
+releases:
+- name: kubo-etcd
+  sha1: 91f7a6592ee6c5242854f3654fe786574e816ffc
+  url: https://storage.googleapis.com/kubo-public/kubo-etcd-2-ubuntu-trusty-3421.11-20170721-091603-591124789-20170721091609.tgz
+  version: 2
+- name: kubo
+  version: latest
+- name: docker
+  sha1: 0ac80f013cc686047cdd7ccc428a8784c5e691bc
+  url: https://storage.googleapis.com/kubo-public/docker-28.0.1-ubuntu-trusty-3421.11-20170720-164316-303456764-20170720164324.tgz
+  version: 28.0.1
+- name: haproxy
+  sha1: a3a911f0cf8e672b27c6cb16318fd8c7c77f5bde
+  url: https://github.com/cloudfoundry-incubator/haproxy-boshrelease/releases/download/v8.4.0/haproxy-8.4.0.tgz
+  version: 8.4.0
+stemcells:
+- alias: trusty
+  os: ubuntu-trusty
+  version: "3421.11"
+update:
+  canaries: 1
+  canary_watch_time: 10000-300000
+  max_in_flight: 1
+  serial: true
+  update_watch_time: 10000-300000
+variables:
+- name: kubo_ca
+  options:
+    common_name: ca
+    is_ca: true
+  type: certificate
+- name: tls-kubelet
+  options:
+    alternative_names:
+    - 192.168.2.203
+    ca: kubo_ca
+    common_name: 192.168.2.203
+  type: certificate
+- name: tls-kubernetes
+  options:
+    alternative_names:
+    - 192.168.2.203
+    - 10.100.200.1
+    - kubernetes
+    - kubernetes.default
+    - kubernetes.default.svc
+    - kubernetes.default.svc.cluster.local
+    ca: kubo_ca
+    common_name: 192.168.2.203
+  type: certificate
+properties:
+  hm:
+    resurrector_enabled: true
