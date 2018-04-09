@@ -22,7 +22,7 @@ rm 3ad64e6d552f4ab6aa3816cd8a6f868587db0202
 mv -v ~/bosh-deployment/bosh-deployment-3ad64e6d552f4ab6aa3816cd8a6f868587db0202/* ~/bosh-deployment/
 rm -rf ~/bosh-deployment/bosh-deployment-3ad64e6d552f4ab6aa3816cd8a6f868587db0202
 
-cd bosh-deployment
+cd ~/bosh-deployment
 
 bosh create-env bosh.yml \
 --state=bosh-state.json \
