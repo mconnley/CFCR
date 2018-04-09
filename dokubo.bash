@@ -15,8 +15,6 @@ sudo chmod 755 bosh-cli-2.0.28-linux-amd64
 
 sudo mv bosh-cli-2.0.28-linux-amd64 /usr/local/bin/bosh
 
-
-
 wget https://codeload.github.com/cloudfoundry/bosh-deployment/zip/3ad64e6d552f4ab6aa3816cd8a6f868587db0202
 
 unzip 3ad64e6d552f4ab6aa3816cd8a6f868587db0202 -d bosh-deployment
