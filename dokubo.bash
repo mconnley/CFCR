@@ -58,7 +58,9 @@ cd ~
 git clone -b v0.7.0 https://github.com/cloudfoundry-incubator/kubo-deployment
 cd kubo-deployment
 
-read -p "Upload or create cloud-config-01.yml and kubo-deployment-01.yml. Press any key to continue..." -n1 -s
+#read -p "Upload or create cloud-config-01.yml and kubo-deployment-01.yml. Press any key to continue..." -n1 -s
+cp ~/CFCR/cloud-config-01.yml ~/kubo-deployment/cloud-config-01.yml
+cp ~/CFCR/kubo-deployment-01.yml ~/kubo-deployment/kubo-deployment-01.yml
 
 bosh -e kubo update-cloud-config cloud-config-01.yml
 wget https://s3.amazonaws.com/bosh-core-stemcells/vsphere/bosh-stemcell-3421.11-vsphere-esxi-ubuntu-trusty-go_agent.tgz
