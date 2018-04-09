@@ -3,10 +3,11 @@ sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get dist-upgrade
 
-sudo apt-get install build-essential zlibc \
-zlib1g-dev ruby ruby-dev openssl libxslt-dev \
-libxml2-dev libssl-dev libreadline6 libreadline6-dev \
-libyaml-dev libsqlite3-dev sqlite3 unzip
+sudo apt-get install build-essential lib32ncurses5 lib32z1 \
+libcrypt-ssleay-perl libmodule-build-perl libxml2-dev \
+libssl-dev libsoap-lite-perl libreadline6-dev libxml-libxml-perl \
+libxslt-dev openssl libreadline6 ruby-dev perl-doc zlib1g-dev \
+ruby libyaml-dev libsqlite3-dev uuid uuid-dev zlibc sqlite3 unzip
 
 wget https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.28-linux-amd64
 
