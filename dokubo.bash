@@ -9,6 +9,15 @@ libssl-dev libsoap-lite-perl libreadline6-dev libxml-libxml-perl \
 libxslt-dev openssl libreadline6 ruby-dev perl-doc zlib1g-dev \
 ruby libyaml-dev libsqlite3-dev uuid uuid-dev zlibc sqlite3 unzip
 
+mv ~/CFCR/VMware-vSphere-CLI-6.5.0-4566394.x86_64.tar.gz ~/
+
+tar xzf VMware-vSphere-CLI-6.5.0-4566394.x86_64.tar.gz
+
+sudo vmware-vsphere-cli-distrib/vmware-install.pl
+
+#dcli +server mcvc3.mattconnley.com +credstore-add +username administrator@vsphere.local +skip-server-verification
+
+
 wget https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.28-linux-amd64
 
 sudo chown root:root bosh-cli-2.0.28-linux-amd64
