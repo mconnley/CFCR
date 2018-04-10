@@ -18,6 +18,8 @@ sudo vmware-vsphere-cli-distrib/vmware-install.pl
 #dcli +server mcvc3.mattconnley.com +credstore-add +username administrator@vsphere.local +skip-server-verification
 
 
+
+
 wget https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.28-linux-amd64
 
 sudo chown root:root bosh-cli-2.0.28-linux-amd64
